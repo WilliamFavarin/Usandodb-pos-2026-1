@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         banco.update(
             TABLE_NAME,
             registro,
-            "_id = ${binding.etCod.text.toString()}",
+            "_id = ${binding.etCod.text}",
             null )
 
         Toast.makeText(this, "Alteração efetuada com sucesso", Toast.LENGTH_LONG).show()
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         banco.delete(
             TABLE_NAME,
-            "_id = ${binding.etCod.text.toString()}",
+            "_id = ${binding.etCod.text}",
             null
         )
 
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         val registros = banco.query(
             TABLE_NAME,
             null,
-            "_id = ${binding.etCod.text.toString()}",
+            "_id = ${binding.etCod.text}",
             null,
             null,
             null,
@@ -124,6 +124,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
+
+        registros.close()
 
     }
 
@@ -151,6 +153,9 @@ class MainActivity : AppCompatActivity() {
             saida.toString(),
             Toast.LENGTH_LONG
         ).show()
+
+        registros.close()
+
     }
 
     companion object {

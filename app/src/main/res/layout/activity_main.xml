@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -11,64 +10,70 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cod:" />
+        android:text="@string/cod" />
 
     <EditText
         android:id="@+id/etCod"
+        android:hint="@string/codigo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
         android:inputType="number" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nome:" />
+        android:text="@string/nome" />
 
     <EditText
         android:id="@+id/etNome"
+        android:hint="@string/nome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
         android:inputType="textCapWords" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Telefone:" />
+        android:text="@string/telefone" />
 
     <EditText
         android:id="@+id/etTelefone"
+        android:hint="@string/telefone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
         android:inputType="textCapWords" />
 
     <Button
         android:id="@+id/btIncluir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Incluir" />
+        android:text="@string/incluir" />
 
     <Button
         android:id="@+id/btAlterar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alterar" />
+        android:text="@string/alterar" />
 
     <Button
         android:id="@+id/btExcluir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Excluir" />
+        android:text="@string/excluir" />
 
     <Button
         android:id="@+id/btPesquisar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pesquisar" />
+        android:text="@string/pesquisar" />
 
     <Button
         android:id="@+id/btListar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Listar" />
+        android:text="@string/listar" />
 
 </LinearLayout>
