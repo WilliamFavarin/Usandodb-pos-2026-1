@@ -12,7 +12,7 @@ import com.willapphouse.usandodb.entity.Cadastro
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var banco: DatabaseHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         enableEdgeToEdge()
-        setContentView(binding.main)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -29,106 +29,87 @@ class MainActivity : AppCompatActivity() {
 
         banco = DatabaseHandler(this)
 
-        binding.btIncluir.setOnClickListener {
-            incluir()
-        }
-
-        binding.btAlterar.setOnClickListener {
-            alterar()
-        }
-
-        binding.btExcluir.setOnClickListener {
-            excluir()
-        }
-
-        binding.btPesquisar.setOnClickListener {
-            pesquisar()
-        }
-
-        binding.btListar.setOnClickListener {
-            listar()
-        }
-
+        binding.btIncluir.setOnClickListener { incluir() }
+        binding.btAlterar.setOnClickListener { alterar() }
+        binding.btExcluir.setOnClickListener { excluir() }
+        binding.btPesquisar.setOnClickListener { pesquisar() }
+        binding.btListar.setOnClickListener { listar() }
     }
 
     private fun incluir() {
+        val nome = binding.etNome.text.toString()
+        val telefone = binding.etTelefone.text.toString()
 
-        val cadastro = Cadastro(
-            0,
-            binding.etNome.text.toString(),
-            binding.etTelefone.text.toString()
-        )
-
-        banco.incluir(cadastro)
-
-        Toast.makeText(this, "Inclusão efetuada com sucesso", Toast.LENGTH_LONG).show()
-
+        if (nome.isNotEmpty() && telefone.isNotEmpty()) {
+            val cadastro = Cadastro(0, nome, telefone)
+            banco.incluir(cadastro)
+            Toast.makeText(this, "Inclusão efetuada com sucesso", Toast.LENGTH_LONG).show()
+            limparCampos()
+        } else {
+            Toast.makeText(this, "Preencha nome e telefone", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun alterar() {
-
-        val cadastro = Cadastro(
-            binding.etCod.text.toString().toInt(),
-            binding.etNome.text.toString(),
-            binding.etTelefone.text.toString()
-        )
-
-        banco.alterar(cadastro)
-
-        Toast.makeText(
-            this,
-            "Alteração efetuada com sucesso",
-            Toast.LENGTH_LONG
-        ).show()
-
+        val idStr = binding.etCod.text.toString()
+        if (idStr.isNotEmpty()) {
+            val cadastro = Cadastro(
+                idStr.toInt(),
+                binding.etNome.text.toString(),
+                binding.etTelefone.text.toString()
+            )
+            banco.alterar(cadastro)
+            Toast.makeText(this, "Alteração efetuada com sucesso", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Informe o código para alterar", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun excluir() {
-
-        banco.excluir(binding.etNome.text.toString().toInt())
-
-        Toast.makeText(
-            this,
-            "Exclusão efetuada com sucesso!",
-            Toast.LENGTH_LONG
-        ).show()
-
+        val idStr = binding.etCod.text.toString() // Corrigido: pegando do campo de código
+        if (idStr.isNotEmpty()) {
+            banco.excluir(idStr.toInt())
+            Toast.makeText(this, "Exclusão efetuada com sucesso!", Toast.LENGTH_LONG).show()
+            limparCampos()
+        } else {
+            Toast.makeText(this, "Informe o código para excluir", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun pesquisar() {
-
-        val cadastro = banco.pesquisar(binding.etCod.text.toString().toInt() )
-
-        if ( cadastro != null ) {
-            binding.etNome.setText( cadastro.nome )
-            binding.etTelefone.setText( cadastro.telefone )
+        val idStr = binding.etCod.text.toString()
+        if (idStr.isNotEmpty()) {
+            val cadastro = banco.pesquisar(idStr.toInt())
+            if (cadastro != null) {
+                binding.etNome.setText(cadastro.nome)
+                binding.etTelefone.setText(cadastro.telefone)
+            } else {
+                Toast.makeText(this, "Registro não encontrado", Toast.LENGTH_LONG).show()
+            }
         } else {
-            Toast.makeText(
-                this,
-                "Registro não encontrado",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, "Informe o código para pesquisar", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun listar() {
-
         val registros = banco.listar()
-
-        val saida = StringBuilder()
-
-        registros.forEach { cadastro ->
-            saida.append( cadastro.nome )
-            saida.append("\n")
+        if (registros.isEmpty()) {
+            Toast.makeText(this, "Nenhum registro encontrado", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        Toast.makeText(
-            this,
-            saida.toString(),
-            Toast.LENGTH_LONG
-        ).show()
+        val saida = StringBuilder()
+        registros.forEach { cadastro ->
+            saida.append("ID: ${cadastro.id} - ${cadastro.nome}\n")
+        }
 
+        Toast.makeText(this, saida.toString(), Toast.LENGTH_LONG).show()
     }
 
+    private fun limparCampos() {
+        binding.etCod.setText("")
+        binding.etNome.setText("")
+        binding.etTelefone.setText("")
+        binding.etNome.requestFocus()
+    }
 }
