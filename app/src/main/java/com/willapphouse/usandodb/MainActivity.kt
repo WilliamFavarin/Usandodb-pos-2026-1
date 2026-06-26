@@ -158,11 +158,5 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    companion object {
-        private const val DB_NAME = "banco.db"
-        private const val TABLE_NAME = "cadastro"
-        private const val ID = 0
-        private const val NOME = 1
-        private const val TELEFONE = 2
-    }
+
 }
