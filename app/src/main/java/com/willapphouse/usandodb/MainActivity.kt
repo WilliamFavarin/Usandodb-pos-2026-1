@@ -1,20 +1,19 @@
 package com.willapphouse.usandodb
 
-import android.content.ContentValues
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.willapphouse.usandodb.database.DatabaseHandler
 import com.willapphouse.usandodb.databinding.ActivityMainBinding
+import com.willapphouse.usandodb.entity.Cadastro
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
-
-    private lateinit var banco: SQLiteDatabase
+    private lateinit var banco: DatabaseHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +27,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        banco = SQLiteDatabase.openOrCreateDatabase(
-            this.getDatabasePath(DB_NAME),
-            null
-        )
-
-        banco.execSQL("CREATE TABLE IF NOT EXISTS " +
-                "${TABLE_NAME}(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "nome TEXT, telefone TEXT)")
+        banco = DatabaseHandler(this)
 
         binding.btIncluir.setOnClickListener {
             incluir()
@@ -56,15 +48,18 @@ class MainActivity : AppCompatActivity() {
         binding.btListar.setOnClickListener {
             listar()
         }
+
     }
 
     private fun incluir() {
 
-        val registro = ContentValues()
-        registro.put( "nome", binding.etNome.text.toString() )
-        registro.put( "telefone", binding.etTelefone.text.toString() )
+        val cadastro = Cadastro(
+            0,
+            binding.etNome.text.toString(),
+            binding.etTelefone.text.toString()
+        )
 
-        banco.insert( TABLE_NAME, null, registro )
+        banco.incluir(cadastro)
 
         Toast.makeText(this, "Inclusão efetuada com sucesso", Toast.LENGTH_LONG).show()
 
@@ -72,27 +67,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun alterar() {
 
-        val registro = ContentValues()
-        registro.put( "nome", binding.etNome.text.toString() )
-        registro.put( "telefone", binding.etTelefone.text.toString() )
+        val cadastro = Cadastro(
+            binding.etCod.text.toString().toInt(),
+            binding.etNome.text.toString(),
+            binding.etTelefone.text.toString()
+        )
 
-        banco.update(
-            TABLE_NAME,
-            registro,
-            "_id = ${binding.etCod.text}",
-            null )
+        banco.alterar(cadastro)
 
-        Toast.makeText(this, "Alteração efetuada com sucesso", Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            this,
+            "Alteração efetuada com sucesso",
+            Toast.LENGTH_LONG
+        ).show()
 
     }
 
     private fun excluir() {
 
-        banco.delete(
-            TABLE_NAME,
-            "_id = ${binding.etCod.text}",
-            null
-        )
+        banco.excluir(binding.etNome.text.toString().toInt())
 
         Toast.makeText(
             this,
@@ -104,19 +97,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun pesquisar() {
 
-        val registros = banco.query(
-            TABLE_NAME,
-            null,
-            "_id = ${binding.etCod.text}",
-            null,
-            null,
-            null,
-            null
-        )
+        val cadastro = banco.pesquisar(binding.etCod.text.toString().toInt() )
 
-        if (registros.moveToNext()) {
-            binding.etNome.setText(registros.getString(NOME))
-            binding.etTelefone.setText(registros.getString(TELEFONE))
+        if ( cadastro != null ) {
+            binding.etNome.setText( cadastro.nome )
+            binding.etTelefone.setText( cadastro.telefone )
         } else {
             Toast.makeText(
                 this,
@@ -125,26 +110,16 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
 
-        registros.close()
-
     }
 
     private fun listar() {
 
-        val registros = banco.query(
-            TABLE_NAME,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
+        val registros = banco.listar()
 
         val saida = StringBuilder()
 
-        while ( registros.moveToNext() ) {
-            saida.append( registros.getString(NOME))
+        registros.forEach { cadastro ->
+            saida.append( cadastro.nome )
             saida.append("\n")
         }
 
@@ -154,9 +129,6 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_LONG
         ).show()
 
-        registros.close()
-
     }
-
 
 }
