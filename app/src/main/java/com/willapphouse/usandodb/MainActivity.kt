@@ -1,5 +1,6 @@
 package com.willapphouse.usandodb
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -92,6 +93,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun listar() {
+
+        val intent = Intent(this, ListarActivity::class.java)
+        startActivity( intent )
+
+        /*
         val registros = banco.listar()
         if (registros.isEmpty()) {
             Toast.makeText(this, "Nenhum registro encontrado", Toast.LENGTH_SHORT).show()
@@ -104,6 +110,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         Toast.makeText(this, saida.toString(), Toast.LENGTH_LONG).show()
+
+
+         */
     }
 
     private fun limparCampos() {
