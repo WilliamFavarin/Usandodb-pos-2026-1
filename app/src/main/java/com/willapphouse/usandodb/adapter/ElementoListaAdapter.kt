@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.willapphouse.usandodb.R
 import com.willapphouse.usandodb.entity.Cadastro
 
@@ -41,6 +42,7 @@ class ElementoListaAdapter(val context: Context, val registros: MutableList<Cada
         val tvNomeElementoLista: TextView = v.findViewById(R.id.tvNomeElementoLista)
         val tvTelefoneElementoLista: TextView = v.findViewById(R.id.tvTelefoneElementoLista)
         val imageView: ImageView = v.findViewById(R.id.imageView)
+        val btEditarElementoLista: ImageView = v.findViewById(R.id.btEditarElementoLista)
 
         tvNomeElementoLista.text = registros[pos].nome
         tvTelefoneElementoLista.text = registros[pos].telefone
@@ -49,6 +51,14 @@ class ElementoListaAdapter(val context: Context, val registros: MutableList<Cada
             imageView.setImageResource(android.R.drawable.star_big_on)
         } else {
             imageView.setImageResource(android.R.drawable.star_big_off)
+        }
+
+        btEditarElementoLista.setOnClickListener {
+            Toast.makeText(
+                context,
+                "clique em $pos",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         return v
