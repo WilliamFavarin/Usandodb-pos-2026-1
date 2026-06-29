@@ -66,7 +66,7 @@ class DatabaseHandler(context: Context) :
         }
     }
 
-    fun listar(): List<Cadastro> {
+    fun listar():  MutableList<Cadastro> {
         val banco = this.readableDatabase
         val saida = mutableListOf<Cadastro>()
         val cursor = banco.query(TABLE_NAME, null, null, null, null, null, null)

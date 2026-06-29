@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.willapphouse.usandodb.adapter.ElementoListaAdapter
 import com.willapphouse.usandodb.database.DatabaseHandler
 import com.willapphouse.usandodb.databinding.ActivityListarBinding
 
@@ -29,15 +30,11 @@ class ListarActivity : AppCompatActivity() {
 
         banco = DatabaseHandler( this )
 
-        val registros = banco.listarCursor()
+        val registros = banco.listar()
 
-        val adapter = SimpleCursorAdapter(
+        val adapter = ElementoListaAdapter(
             this,
-            android.R.layout.simple_list_item_2,
-            registros,
-            arrayOf( "nome", "telefone" ),
-            intArrayOf( android.R.id.text1, android.R.id.text2 ),
-            0
+            registros
         )
 
         binding.lvCadastro.adapter = adapter
