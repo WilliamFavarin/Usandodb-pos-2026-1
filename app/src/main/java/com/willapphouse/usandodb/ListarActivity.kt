@@ -1,5 +1,6 @@
 package com.willapphouse.usandodb
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.SimpleCursorAdapter
@@ -28,7 +29,17 @@ class ListarActivity : AppCompatActivity() {
             insets
         }
 
+        binding.btIncluir.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         banco = DatabaseHandler( this )
+
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         val registros = banco.listar()
 
@@ -38,6 +49,7 @@ class ListarActivity : AppCompatActivity() {
         )
 
         binding.lvCadastro.adapter = adapter
-
     }
+
+
 }
