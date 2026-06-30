@@ -30,40 +30,43 @@ class MainActivity : AppCompatActivity() {
 
         banco = DatabaseHandler(this)
 
-        binding.btIncluir.setOnClickListener { incluir() }
+        if ( intent.getIntExtra("id", 0) > 0 ) {
+            binding.etCod.setText( intent.getIntExtra( "id", 0 ).toString() )
+            binding.etNome.setText( intent.getStringExtra( "nome" ) )
+            binding.etTelefone.setText( intent.getStringExtra( "telefone" ) )
+        }
+
         binding.btAlterar.setOnClickListener { alterar() }
         binding.btExcluir.setOnClickListener { excluir() }
         binding.btPesquisar.setOnClickListener { pesquisar() }
-        binding.btListar.setOnClickListener { listar() }
-    }
-
-    private fun incluir() {
-        val nome = binding.etNome.text.toString()
-        val telefone = binding.etTelefone.text.toString()
-
-        if (nome.isNotEmpty() && telefone.isNotEmpty()) {
-            val cadastro = Cadastro(0, nome, telefone)
-            banco.incluir(cadastro)
-            Toast.makeText(this, "Inclusão efetuada com sucesso", Toast.LENGTH_LONG).show()
-            limparCampos()
-        } else {
-            Toast.makeText(this, "Preencha nome e telefone", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun alterar() {
-        val idStr = binding.etCod.text.toString()
-        if (idStr.isNotEmpty()) {
+        val id = binding.etCod.text.toString().toIntOrNull()
+
+        if (id == null) {
             val cadastro = Cadastro(
-                idStr.toInt(),
+                0,
+                binding.etNome.text.toString(),
+                binding.etTelefone.text.toString()
+            )
+            banco.incluir(cadastro)
+        } else {
+            val cadastro = Cadastro(
+                id,
                 binding.etNome.text.toString(),
                 binding.etTelefone.text.toString()
             )
             banco.alterar(cadastro)
-            Toast.makeText(this, "Alteração efetuada com sucesso", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "Informe o código para alterar", Toast.LENGTH_SHORT).show()
         }
+
+        Toast.makeText(
+            this,
+            "Operação efetuada com sucesso",
+            Toast.LENGTH_LONG
+        ).show()
+
+        finish()
     }
 
     private fun excluir() {
@@ -75,6 +78,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Informe o código para excluir", Toast.LENGTH_SHORT).show()
         }
+
+        finish()
     }
 
     private fun pesquisar() {
@@ -90,29 +95,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Informe o código para pesquisar", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun listar() {
-
-        val intent = Intent(this, ListarActivity::class.java)
-        startActivity( intent )
-
-        /*
-        val registros = banco.listar()
-        if (registros.isEmpty()) {
-            Toast.makeText(this, "Nenhum registro encontrado", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val saida = StringBuilder()
-        registros.forEach { cadastro ->
-            saida.append("ID: ${cadastro.id} - ${cadastro.nome}\n")
-        }
-
-        Toast.makeText(this, saida.toString(), Toast.LENGTH_LONG).show()
-
-
-         */
     }
 
     private fun limparCampos() {

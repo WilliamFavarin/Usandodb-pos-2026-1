@@ -1,6 +1,7 @@
 package com.willapphouse.usandodb.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.willapphouse.usandodb.MainActivity
 import com.willapphouse.usandodb.R
 import com.willapphouse.usandodb.entity.Cadastro
 
@@ -54,11 +56,11 @@ class ElementoListaAdapter(val context: Context, val registros: MutableList<Cada
         }
 
         btEditarElementoLista.setOnClickListener {
-            Toast.makeText(
-                context,
-                "clique em $pos",
-                Toast.LENGTH_LONG
-            ).show()
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra( "id", registros[pos].id )
+            intent.putExtra( "nome", registros[pos].nome )
+            intent.putExtra( "telefone", registros[pos].telefone )
+            context.startActivity( intent )
         }
 
         return v

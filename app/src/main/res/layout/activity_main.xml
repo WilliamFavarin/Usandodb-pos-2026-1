@@ -15,6 +15,7 @@
     <EditText
         android:id="@+id/etCod"
         android:hint="@string/codigo"
+        android:enabled="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:importantForAutofill="no"
@@ -47,16 +48,10 @@
         android:inputType="textCapWords" />
 
     <Button
-        android:id="@+id/btIncluir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/incluir" />
-
-    <Button
         android:id="@+id/btAlterar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/alterar" />
+        android:text="@string/salvar" />
 
     <Button
         android:id="@+id/btExcluir"
@@ -69,11 +64,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pesquisar" />
-
-    <Button
-        android:id="@+id/btListar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/listar" />
 
 </LinearLayout>
