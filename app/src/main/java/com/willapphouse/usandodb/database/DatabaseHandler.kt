@@ -11,10 +11,11 @@ class DatabaseHandler(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
-                "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "$COL_NOME TEXT, " +
-                "$COL_TELEFONE TEXT)"
+        db?.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
+                    "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "$COL_NOME TEXT, " +
+                    "$COL_TELEFONE TEXT)"
         )
     }
 
@@ -66,7 +67,7 @@ class DatabaseHandler(context: Context) :
         }
     }
 
-    fun listar():  MutableList<Cadastro> {
+    fun listar(): MutableList<Cadastro> {
         val banco = this.readableDatabase
         val saida = mutableListOf<Cadastro>()
         val cursor = banco.query(TABLE_NAME, null, null, null, null, null, null)
@@ -93,7 +94,7 @@ class DatabaseHandler(context: Context) :
         private const val DATABASE_NAME = "banco.db"
         private const val DATABASE_VERSION = 1
         private const val TABLE_NAME = "cadastro"
-        
+
         private const val COL_ID = "_id"
         private const val COL_NOME = "nome"
         private const val COL_TELEFONE = "telefone"
