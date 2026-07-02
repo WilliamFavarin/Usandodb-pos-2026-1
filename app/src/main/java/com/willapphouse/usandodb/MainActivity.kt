@@ -9,9 +9,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.willapphouse.usandodb.database.DatabaseHandler
 import com.willapphouse.usandodb.databinding.ActivityMainBinding
 import com.willapphouse.usandodb.entity.Cadastro
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,44 +49,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun alterar() {
-        val id = binding.etCod.text.toString().toIntOrNull()
 
-        if (id == null) {
-            val cadastro = Cadastro(
-                0,
-                binding.etNome.text.toString(),
-                binding.etTelefone.text.toString()
-            )
-            banco.incluir(cadastro)
-        } else {
-            val cadastro = Cadastro(
-                id,
-                binding.etNome.text.toString(),
-                binding.etTelefone.text.toString()
-            )
-            banco.alterar(cadastro)
+        lifecycleScope.launch {
+
+            val id = binding.etCod.text.toString().toIntOrNull()
+
+            if (id == null) {
+                val cadastro = Cadastro(
+                    0,
+                    binding.etNome.text.toString(),
+                    binding.etTelefone.text.toString()
+                )
+                banco.incluir(cadastro)
+            } else {
+                val cadastro = Cadastro(
+                    id,
+                    binding.etNome.text.toString(),
+                    binding.etTelefone.text.toString()
+                )
+                banco.alterar(cadastro)
+            }
+
+            finish()
         }
-
-        Toast.makeText(
-            this,
-            "Operação efetuada com sucesso",
-            Toast.LENGTH_LONG
-        ).show()
-
-        finish()
     }
 
     private fun excluir() {
-        val idStr = binding.etCod.text.toString() // Corrigido: pegando do campo de código
-        if (idStr.isNotEmpty()) {
-            banco.excluir(idStr.toInt())
-            Toast.makeText(this, "Exclusão efetuada com sucesso!", Toast.LENGTH_LONG).show()
-            limparCampos()
-        } else {
-            Toast.makeText(this, "Informe o código para excluir", Toast.LENGTH_SHORT).show()
-        }
 
-        finish()
+        lifecycleScope.launch {
+            val id = binding.etCod.text.toString().toIntOrNull()
+
+            if (id == null) {
+                binding.etCod.error = "Digite um código válido"
+            } else {
+
+                banco.excluir(id)
+
+                Toast.makeText(
+                    this@MainActivity,
+                    "Exclusão efetuada com sucesso.",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                finish()
+            }
+        }
     }
 
     private fun pesquisar() {
@@ -100,24 +109,34 @@ class MainActivity : AppCompatActivity() {
             val id = etCodPesquisa.text.toString().toIntOrNull()
 
             if (id == null) {
-                Toast.makeText(this, "Informe o código para pesquisar", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Informe o código para pesquisar",
+                    Toast.LENGTH_LONG
+                ).show()
             } else {
 
-                val cadastro = banco.pesquisar(id)
+                lifecycleScope.launch {
 
-                if (cadastro != null) {
-                    binding.etCod.setText(etCodPesquisa.text.toString())
-                    binding.etNome.setText(cadastro.nome)
-                    binding.etTelefone.setText(cadastro.telefone)
-                } else {
-                    Toast.makeText(this, "Registro não encontrado", Toast.LENGTH_LONG).show()
+                    val cadastro = banco.pesquisar(id)
+
+                    if (cadastro != null) {
+                        binding.etCod.setText(etCodPesquisa.text.toString())
+                        binding.etNome.setText(cadastro.nome)
+                        binding.etTelefone.setText(cadastro.telefone)
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Registro não encontrado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
         )
         dialog.setView(etCodPesquisa)
         dialog.show()
-
     }
 
     private fun limparCampos() {

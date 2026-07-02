@@ -2,15 +2,15 @@ package com.willapphouse.usandodb
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.SimpleCursorAdapter
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.willapphouse.usandodb.adapter.ElementoListaAdapter
 import com.willapphouse.usandodb.database.DatabaseHandler
 import com.willapphouse.usandodb.databinding.ActivityListarBinding
+import kotlinx.coroutines.launch
 
 class ListarActivity : AppCompatActivity() {
 
@@ -34,21 +34,24 @@ class ListarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        banco = DatabaseHandler( this )
+        banco = DatabaseHandler(this)
 
     }
 
     override fun onStart() {
         super.onStart()
 
-        val registros = banco.listar()
+        lifecycleScope.launch {
 
-        val adapter = ElementoListaAdapter(
-            this,
-            registros
-        )
+            val registros = banco.listar()
 
-        binding.lvCadastro.adapter = adapter
+            val adapter = ElementoListaAdapter(
+                this@ListarActivity,
+                registros
+            )
+
+            binding.lvCadastro.adapter = adapter
+        }
     }
 
 
